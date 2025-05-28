@@ -14,9 +14,11 @@ describe("TodoApp", () => {
     render(<App />);
 
     expect(screen.getByText("Buy milk")).toBeDefined();
-    screen.getByTestId("todo0");
+    screen.getByTestId("todo-0");
 
     // TODO: Verify second todo
+    expect(screen.getByText("Buy bread")).toBeDefined();
+    screen.getByTestId("todo-1");
   });
   
   // TODO: Test app functionality: Create, edit, delete, mark as done.
