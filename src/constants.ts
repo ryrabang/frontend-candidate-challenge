@@ -1,6 +1,6 @@
-import { TodoType } from "./types";
+import { TodoType } from "./types"
 
 export const INITIAL_TODOS: TodoType[] = [
-    { text: "Buy milk", done: true },
-    { text: "Buy bread", done: false },
-  ]
+  { id: 0, text: "Buy milk", done: true },
+  { id: 1, text: "Buy bread", done: false },
+]
