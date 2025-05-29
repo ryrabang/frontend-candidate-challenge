@@ -7,7 +7,11 @@ import { INITIAL_TODOS } from "./constants"
 import { AddTodo } from "./components/AddTodo"
 
 export default function App() {
+
+  // Get initial todo from cache?
   const [todos, setTodos] = useState(INITIAL_TODOS)
+
+  // Ideally we would get the next unique id from the inital todo list
   const [newTodoId, setNewTodoId] = useState(2)
 
   const handleAddTodo = (newTodoText: string) => {
@@ -15,7 +19,7 @@ export default function App() {
       { id: newTodoId, text: newTodoText, done: false },
       ...prev,
     ])
-    setNewTodoId((prev) => prev++)
+    setNewTodoId((prev) => prev + 1)
   }
 
   const onChecked = (id: number) => {
@@ -31,11 +35,15 @@ export default function App() {
     )
   }
 
+  const onDelete = (id: number) => {
+    setTodos((prev) => prev.filter(item => item.id !== id))
+  }
+
   return (
     <div className="todoListApp">
       <div className="forsta-logo" />
       <AddTodo handleAddTodo={handleAddTodo} />
-      <TodoList todos={todos} onChecked={onChecked} />
+      <TodoList todos={todos} onChecked={onChecked} onDelete={onDelete}/>
     </div>
   )
 }

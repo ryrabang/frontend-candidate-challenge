@@ -52,6 +52,20 @@ describe("TodoApp", () => {
     })
   })
 
+  it("delete item", async () => {
+    render(<App />)
+
+    const deleteButton = screen.getByTestId("todo-delete-0")
+
+    act(() => {
+      userEvent.click(deleteButton)
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText("Buy milk")).toBeNull()
+    })
+  })
+
   it("mark item as done", async () => {
     render(<App />)
     const checkbox = screen.getByTestId("todo-checkbox-1")
