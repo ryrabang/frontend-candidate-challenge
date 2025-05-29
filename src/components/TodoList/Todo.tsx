@@ -11,7 +11,7 @@ export function Todo({
     item
 }: TodoProps) {
     return (
-        <li key={`todo-${index}`}>
+        <li>
           <span data-testid={`todo-${index}`}>{item.text}</span>
         </li>
     )

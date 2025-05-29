@@ -1,8 +1,9 @@
 import React from 'react';
 
 import App from "../App";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import userEvent from '@testing-library/user-event';
 
 describe("TodoApp", () => {
   it("renders app", () => {
@@ -22,4 +23,20 @@ describe("TodoApp", () => {
   });
   
   // TODO: Test app functionality: Create, edit, delete, mark as done.
+
+  it("creates item", async () => {
+    render(<App />);
+
+    const input = screen.getByTestId("todo-textbox");
+    act(() => {
+      userEvent.type(input, 'New todo{enter}');
+    })
+
+
+    // TODO: Verify second todo
+    await waitFor(() => {
+    expect(screen.getByText("New todo")).toBeDefined();
+    screen.getByTestId("todo-2");
+    })
+  })
 });
