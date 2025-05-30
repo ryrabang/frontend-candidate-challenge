@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState } from "react"
 
 export function useAriaLiveAnnouncements() {
   const [message, setMessage] = useState<string>("")

@@ -8,7 +8,12 @@ type TodoListProps = {
   onDelete: (id: number, value: string) => void
   onEdit: (id: number, value: string) => void
 }
-export const TodoList = ({ todos, onChecked, onDelete, onEdit }: TodoListProps) => {
+export const TodoList = ({
+  todos,
+  onChecked,
+  onDelete,
+  onEdit,
+}: TodoListProps) => {
   return (
     <ul className="todoList">
       {todos.map((item) => (
