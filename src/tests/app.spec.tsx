@@ -3,6 +3,7 @@ import "@testing-library/jest-dom/extend-expect"
 import userEvent from "@testing-library/user-event"
 
 import App from "../App"
+import { addButton, addTextBox, defaultTodo1, defaultTodo2, newTodo1, newTodo2 } from "./testConstants"
 
 describe("TodoApp", () => {
   it("renders app", () => {
@@ -13,12 +14,12 @@ describe("TodoApp", () => {
   it("renders initial items", () => {
     render(<App />)
 
-    expect(screen.getByText("Buy milk")).toBeDefined()
-    screen.getByTestId("todo-0")
+    expect(screen.getByText(defaultTodo1.text)).toBeDefined()
+    screen.getByTestId(defaultTodo1.id)
 
     // TODO: Verify second todo
-    expect(screen.getByText("Buy bread")).toBeDefined()
-    screen.getByTestId("todo-1")
+    expect(screen.getByText(defaultTodo2.text)).toBeDefined()
+    screen.getByTestId(defaultTodo2.id)
   })
 
   // TODO: Test app functionality: Create, edit, delete, mark as done.
@@ -26,48 +27,48 @@ describe("TodoApp", () => {
   it("creates item", async () => {
     render(<App />)
 
-    const input = screen.getByTestId("todo-add-textbox")
+    const input = screen.getByTestId(addTextBox)
 
     // Test adding using enter
     act(() => {
-      userEvent.type(input, "New todo{enter}")
+      userEvent.type(input, `${newTodo1.text}{enter}`)
     })
 
     await waitFor(() => {
-      expect(screen.getByText("New todo")).toBeDefined()
-      screen.getByTestId("todo-2")
+      expect(screen.getByText(newTodo1.text)).toBeDefined()
+      screen.getByTestId(newTodo1.id)
     })
 
     // Test adding using the add button
-    const addButton = screen.getByText("Add")
+    const add = screen.getByText(addButton.text)
 
     act(() => {
-      userEvent.type(input, "New todo 2")
-      userEvent.click(addButton)
+      userEvent.type(input, newTodo2.text)
+      userEvent.click(add)
     })
     await waitFor(() => {
-      expect(screen.getByText("New todo 2")).toBeDefined()
-      screen.getByTestId("todo-3")
+      expect(screen.getByText(newTodo2.text)).toBeDefined()
+      screen.getByTestId(newTodo2.id)
     })
   })
 
   it("delete item", async () => {
     render(<App />)
 
-    const item = screen.getByTestId("todo-0")
+    const item = screen.getByTestId(defaultTodo1.id)
 
     act(() => {
       userEvent.hover(item)
     })
 
-    const deleteButton = screen.getByTestId("todo-0-delete")
+    const deleteButton = screen.getByTestId(defaultTodo1.delete)
 
     act(() => {
       userEvent.click(deleteButton)
     })
 
     await waitFor(() => {
-      expect(screen.queryByText("Buy milk")).toBeNull()
+      expect(screen.queryByText(defaultTodo1.text)).toBeNull()
     })
   })
 
@@ -75,42 +76,42 @@ describe("TodoApp", () => {
     render(<App />)
 
     act(() => {
-      userEvent.click(screen.getByTestId("todo-0-text"))
+      userEvent.click(screen.getByTestId(defaultTodo1.textId))
     })
 
     // Test saving using enter
-    const editBox1 = screen.getByTestId("todo-0-edit")
+    const editBox1 = screen.getByTestId(defaultTodo1.edit)
     act(() => {
       userEvent.clear(editBox1)
-      userEvent.type(editBox1, "Buy Chocolate{enter}")
+      userEvent.type(editBox1, `${defaultTodo1.editedText}{enter}`)
     })
 
     await waitFor(() => {
-      expect(screen.getByTestId("todo-0")).toHaveTextContent("Buy Chocolate")
-      expect(screen.queryByTestId("todo-0-edit")).toBeNull()
+      expect(screen.getByTestId(defaultTodo1.id)).toHaveTextContent(defaultTodo1.editedText)
+      expect(screen.queryByTestId(defaultTodo1.edit)).toBeNull()
     })
 
     // Test saving using save button
     act(() => {
-      userEvent.click(screen.getByTestId("todo-0-text"))
+      userEvent.click(screen.getByTestId(defaultTodo2.textId))
     })
 
-    const editBox2 = screen.getByTestId("todo-0-edit")
+    const editBox2 = screen.getByTestId(defaultTodo2.edit)
     act(() => {
       userEvent.clear(editBox2)
-      userEvent.type(editBox1, "Buy Potato")
-      userEvent.click(screen.getByTestId("todo-0-save"))
+      userEvent.type(editBox2, defaultTodo2.editedText)
+      userEvent.click(screen.getByTestId(defaultTodo2.save))
     })
 
     await waitFor(() => {
-      expect(screen.getByTestId("todo-0")).toHaveTextContent("Buy Potato")
-      expect(screen.queryByTestId("todo-0-edit")).toBeNull()
+      expect(screen.getByTestId(defaultTodo2.id)).toHaveTextContent(defaultTodo2.editedText)
+      expect(screen.queryByTestId(defaultTodo2.edit)).toBeNull()
     })
   })
 
   it("mark item as done", async () => {
     render(<App />)
-    const checkbox = screen.getByTestId("todo-1-checkbox")
+    const checkbox = screen.getByTestId(defaultTodo2.checkbox)
     act(() => {
       userEvent.click(checkbox)
     })
@@ -122,7 +123,7 @@ describe("TodoApp", () => {
 
   it("mark item as not done", async () => {
     render(<App />)
-    const checkbox = screen.getByTestId("todo-0-checkbox")
+    const checkbox = screen.getByTestId(defaultTodo1.checkbox)
     expect(checkbox).toBeChecked()
     act(() => {
       userEvent.click(checkbox)
@@ -135,30 +136,30 @@ describe("TodoApp", () => {
 
   it("Check if save and delete buttons are visible", async () => {
     render(<App />)
-    expect(screen.queryByTestId("todo-0-save")).toBeNull()
-    expect(screen.getByTestId("todo-0-buttons")).not.toBeVisible()
-    expect(screen.getByTestId("todo-0-delete")).not.toBeVisible()
+    expect(screen.queryByTestId(defaultTodo1.save)).toBeNull()
+    expect(screen.getByTestId(defaultTodo1.buttons)).not.toBeVisible()
+    expect(screen.getByTestId(defaultTodo1.delete)).not.toBeVisible()
 
-    const item = screen.getByTestId("todo-0")
+    const item = screen.getByTestId(defaultTodo1.id)
 
     act(() => {
       userEvent.hover(item)
     })
 
     await waitFor(() => {
-      expect(screen.queryByTestId("todo-0-save")).toBeNull()
-      expect(screen.getByTestId("todo-0-buttons")).toBeVisible()
-      expect(screen.getByTestId("todo-0-delete")).toBeVisible()
+      expect(screen.queryByTestId(defaultTodo1.save)).toBeNull()
+      expect(screen.getByTestId(defaultTodo1.buttons)).toBeVisible()
+      expect(screen.getByTestId(defaultTodo1.delete)).toBeVisible()
     })
 
     act(() => {
-      userEvent.click(screen.getByTestId("todo-0-text"))
+      userEvent.click(screen.getByTestId(defaultTodo1.textId))
       userEvent.hover(item)
     })
     await waitFor(() => {
-      expect(screen.getByTestId("todo-0-save")).toBeVisible()
-      expect(screen.getByTestId("todo-0-buttons")).toBeVisible()
-      expect(screen.getByTestId("todo-0-delete")).toBeVisible()
+      expect(screen.getByTestId(defaultTodo1.save)).toBeVisible()
+      expect(screen.getByTestId(defaultTodo1.buttons)).toBeVisible()
+      expect(screen.getByTestId(defaultTodo1.delete)).toBeVisible()
     })
   })
 
@@ -169,75 +170,75 @@ describe("TodoApp", () => {
       userEvent.tab()
     })
     
-    expect(screen.getByTestId("todo-add-textbox")).toHaveFocus()
+    expect(screen.getByTestId(addTextBox)).toHaveFocus()
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("add-button")).toHaveFocus()
+    expect(screen.getByTestId(addButton.id)).toHaveFocus()
 
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-0-checkbox")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo1.checkbox)).toHaveFocus()
 
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-0-text")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo1.textId)).toHaveFocus()
 
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-0-delete")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo1.delete)).toHaveFocus()
 
     act(() => {
       userEvent.tab({ shift: true })
       userEvent.keyboard("[Enter]")
     })
-    expect(screen.getByTestId("todo-0-edit")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo1.edit)).toHaveFocus()
 
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-0-save")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo1.save)).toHaveFocus()
 
     act(() => {
       userEvent.tab()
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-1-checkbox")).toHaveFocus()
+    expect(screen.getByTestId(defaultTodo2.checkbox)).toHaveFocus()
   })
 
   it("Check if edit mode turns off", async () => {
     render(<App />)
     
     act(() => {
-      userEvent.click(screen.getByTestId("todo-0-text"))
+      userEvent.click(screen.getByTestId(defaultTodo1.textId))
     })
-    expect(screen.getByTestId("todo-0-edit")).toBeVisible()
+    expect(screen.getByTestId(defaultTodo1.edit)).toBeVisible()
 
     // test tab focus off element
     act(() => {
       userEvent.tab()
     })
-    expect(screen.getByTestId("todo-0-edit")).toBeVisible()
+    expect(screen.getByTestId(defaultTodo1.edit)).toBeVisible()
 
     act(() => {
       userEvent.tab()
       userEvent.tab()
     })
-    expect(screen.queryByTestId("todo-0-edit")).toBeNull()
+    expect(screen.queryByTestId(defaultTodo1.edit)).toBeNull()
 
     act(() => {
-      userEvent.click(screen.getByTestId("todo-0-text"))
+      userEvent.click(screen.getByTestId(defaultTodo1.textId))
     })
-    expect(screen.getByTestId("todo-0-edit")).toBeVisible()
+    expect(screen.getByTestId(defaultTodo1.edit)).toBeVisible()
 
     // test reverse tab focusing
     act(() => {
       userEvent.tab({ shift: true })
       userEvent.tab({ shift: true })
     })
-    expect(screen.queryByTestId("todo-0-edit")).toBeNull()
+    expect(screen.queryByTestId(defaultTodo1.edit)).toBeNull()
   })
 })
