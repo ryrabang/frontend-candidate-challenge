@@ -9,6 +9,7 @@ export function AddTodo({ handleAddTodo }: AddTodoProps) {
 
   return (
     <form
+      className="addTodo"
       onSubmit={(e) => {
         e.preventDefault()
         if (newTodo) {
@@ -18,14 +19,14 @@ export function AddTodo({ handleAddTodo }: AddTodoProps) {
       }}
     >
       <input
-        aria-label="todo-textbox"
-        data-testid="todo-textbox"
+        aria-label="Add new todo text box"
+        data-testid="todo-add-textbox"
         placeholder="Add new todo"
         type="text"
         onChange={(e) => setNewTodo(e.target.value)}
         value={newTodo}
       />
-      <button type="submit" data-testid="add">
+      <button type="submit" data-testid="add-button">
         Add
       </button>
     </form>
